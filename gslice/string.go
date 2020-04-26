@@ -13,7 +13,7 @@ type optSliceString struct {
 
 // 新建string 处理类
 func NewOptSliStr(slc []string) optSliceString {
-	if len(slc) == 0 {
+	if slc == nil {
 		slc = []string{}
 	}
 	return optSliceString{slc}
@@ -73,4 +73,56 @@ func (this optSliceString) SliTransIF() (resSli []interface{}) {
 		resSli = append(resSli, this.slc[i])
 	}
 	return
+}
+
+// 二分法向前查找目标值位置
+func (this optSliceString) FindAcs(dest string) (index int) {
+	lo, hi := 0, len(this.slc)-1
+	for lo <= hi {
+		m := (lo + hi) >> 1
+		if this.slc[m] < dest {
+			hi = m - 1
+		} else if this.slc[m] > dest {
+			lo = m + 1
+		} else {
+			return m
+		}
+	}
+	return -1
+}
+
+// 二分法向后查找目标值位置
+func (this optSliceString) FindDesc(dest string) (index int) {
+	lo, hi := 0, len(this.slc)-1
+	for lo <= hi {
+		m := (lo + hi) >> 1
+		if this.slc[m] < dest {
+			lo = m + 1
+		} else if this.slc[m] > dest {
+			hi = m - 1
+		} else {
+			return m
+		}
+	}
+	return -1
+}
+
+// 查找目标值第一次出现的位置
+func (this optSliceString) Index(dest string) (index int) {
+	for i := 0; i < len(this.slc); i++ {
+		if this.slc[i] == dest {
+			return i
+		}
+	}
+	return -1
+}
+
+// 查找目标值最后一次出现的位置
+func (this optSliceString) LastIndex(dest string) (lastIndex int) {
+	for i := len(this.slc) - 1; i >= 0; i-- {
+		if this.slc[i] == dest {
+			return i
+		}
+	}
+	return -1
 }
